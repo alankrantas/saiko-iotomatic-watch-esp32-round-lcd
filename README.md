@@ -4,7 +4,7 @@
 
 "Saiko" (**さいこう**) is an ESP32-based NTP clock drawing a watch dial by code on a GC9A01A round TFT LCD (240x240 pixels).
 
-The dial design is inspired by a **Seiko 5 Sports SRPK33K1** diver watch, and the second hand moves 6 times a second, similar to the 4R36 movement.
+The dial design is inspired by a **Seiko 5 Sports SRPK33K1** diver watch, and the second hand moves 6 times a second like the 4R36 movement.
 
 You can read more about the design on [my Hackster.io project page](https://www.hackster.io/alankrantas/saiko-iotomatic-watch-d619e5).
 
@@ -37,16 +37,16 @@ You can read more about the design on [my Hackster.io project page](https://www.
 
 ## Clock Setup
 
-1. Change the `SECRET_SSID` and `SECRET_PASS` to your WiFi ssid/password in `secret.h`.
-2. Modify `NTP_SERVER` and `NTP_HOUR_OFFSET` to a setting you perfer.
-3. If `DEMO_MODE` is set to `true`, the watch will display a fixed time (`10:31:42 SUN 31th`) without connnecting to WiFi.
-4. If `BENCHMARK` is set to `true`, it will calculate and print the time needed to draw the watch dial.
+- Change the `SECRET_SSID` and `SECRET_PASS` to your WiFi ssid/password in `secret.h`.
+- Modify `NTP_SERVER` and `NTP_HOUR_OFFSET` to a setting you perfer.
+- If `DEMO_MODE` is set to `true`, the watch will display a fixed time (`10:31:42 SUN 31th`) without connnecting to WiFi.
+- If `BENCHMARK` is set to `true`, it will calculate and print the time needed to draw the watch dial.
 
 ### Advanced
 
-1. Most specs and color on the dial can actually be adjusted.
-2. `LOGO_NAME` is the name shown on the top half of watch, and `DESCRIPTION` is the smaller text on the lower half.
-3. `SECOND_HAND_VIBRATION` defines the vibration of the second hand (6 = 3 Hz).
-4. The parts of the hour and minute hands are identified by alphabet codes:
+- Most specs and color on the dial can actually be adjusted, for example:
+  - `LOGO_NAME` is the name shown on the top half of watch, and `DESCRIPTION` is the smaller text on the lower half.
+  - `SECOND_HAND_VIBRATION` defines the vibration of the second hand (6 = 3 Hz).
+- The parts of the hour and minute hands are identified by alphabet codes:
 
 ![design](design.png)
