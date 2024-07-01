@@ -2,9 +2,9 @@
 
 ![saiko](saiko.JPG)
 
-"Saiko" (**さいこう**) is an ESP32-based NTP clock drawing a watch dial by code on a GC9A01A round TFT LCD (240x240 pixels).
+"Saiko(u)" (**さいこう**) is an ESP32-based NTP clock drawing a watch dial by code on a GC9A01A round TFT LCD (240x240 pixels).
 
-The dial design is inspired by a **Seiko 5 Sports SRPK33K1** diver watch, and the second hand moves 6 times a second like the 4R36 movement.
+The analog dial design is based on/inspired by a **Seiko 5 Sports SRPK33K1** diver watch, with the second hand moves 6 times a second as in the 4R36 mechanical movement. The dates do not rotate like the real 4R36 though.
 
 You can read more about the design on [my Hackster.io project page](https://www.hackster.io/alankrantas/saiko-iotomatic-watch-d619e5).
 
