@@ -14,8 +14,8 @@ Create a <secrets.h> in the same project:
 #define BAUD_RATE 115200    // serial port baud rate
 #define CONNECT_TIMEOUT 30  // WiFi connection timeout (seconds)
 
-#define NTP_SERVER "time.stdtime.gov.tw"  // NTP server
-#define NTP_HOUR_OFFSET 8                 // timezone offset (hours; 1 = +1, -1 = -1)
+#define NTP_SERVER "pool.ntp.org"  // NTP server
+#define NTP_HOUR_OFFSET 0          // timezone offset (hours; 1 = +1, -1 = -1)
 
 #define TFT_CS 5        // GC9A01A CS pin
 #define TFT_DC 21       // GC9A01A DC pin
