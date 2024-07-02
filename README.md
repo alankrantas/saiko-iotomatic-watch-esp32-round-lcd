@@ -46,7 +46,7 @@ The project is not meant for commerical use. You can read more about the more de
 
 - Most specs and color on the dial can actually be adjusted, for example:
   - `LOGO_NAME` is the name shown on the top half of watch, and `DESCRIPTION` is the smaller text on the lower half.
-  - `SECOND_HAND_VIBRATION` defines the the second hand vibrations (6 = 3 Hz). The code automatically calculates the drawing cycle time and the second hand moving angle.
+  - `SECOND_HAND_VIBRATION` defines the the second hand vibrations (`6` = 3 Hz). The code automatically calculates the drawing cycle time and the second hand moving angle.
 - The parts of the hour and minute hands are identified by alphabet codes, since I do not know how to name them:
 
 ![design](design.png)
