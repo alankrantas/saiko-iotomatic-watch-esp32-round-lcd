@@ -9,13 +9,13 @@ Create a <secrets.h> in the same project:
 
 // user configuration
 
-#define DEMO_MODE false      // demo display mode (fixed time, will not connect wifi)
-#define BENCHMARK false      // print dial drawing time (ms) into serial port
-#define BAUD_RATE 115200     // serial port baud rate
-#define CONNECT_TIMEOUT 600  // WiFi connection timeout (seconds)
+#define DEMO_MODE false     // demo display mode (fixed time, will not connect wifi)
+#define BENCHMARK false     // print dial drawing time (ms) into serial port
+#define BAUD_RATE 115200    // serial port baud rate
+#define CONNECT_TIMEOUT 30  // WiFi connection timeout (seconds)
 
-#define NTP_SERVER "time.stdtime.gov.tw"  // NTP server
-#define NTP_HOUR_OFFSET 8                 // timezone offset (hours; 1 = +1, -1 = -1)
+#define NTP_SERVER "pool.ntp.org"  // NTP server
+#define NTP_HOUR_OFFSET 0          // timezone offset (hours; 1 = +1, -1 = -1)
 
 #define TFT_CS 5        // GC9A01A CS pin
 #define TFT_DC 21       // GC9A01A DC pin
@@ -206,7 +206,7 @@ NTPClient timeClient(
   ntpUDP,
   NTP_SERVER,
   NTP_HOUR_OFFSET * 60 * 60,
-  30 * 60 * 1000);
+  15 * 60 * 1000);
 
 void setup() {
   Serial.begin(BAUD_RATE);
