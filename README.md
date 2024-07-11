@@ -31,16 +31,16 @@ The project is not meant for commerical use. You can read more about the more de
 - [Adafruit GFX Library](https://github.com/adafruit/Adafruit-GFX-Library)
 - [Adafruit GC9A01A Library](https://github.com/adafruit/Adafruit_GC9A01A)
 
-> Note: The clock will try to update time from the NTP server every 30 minutes.
+> Note: by default the NTP client will update time every 20 minutes and will check/force update every hour.
 >
-> However, the `NTPClient` may cause several-second blocking delays (which cause the watch temporarily stopped moving) due to internet or NTP issues. There are currently no good way around this but to change a better NTP server and/or a better WiFi environment depending on where you are.
+> However, the `NTPClient` may cause several-second blocking delays during the updates (which makes the watch temporarily stopped moving) due to internet or NTP server issues. There is currently no good solution to get around this but to change a better NTP server and/or a better WiFi environment depending on where you are.
 
 ## Clock Setup
 
 - Change the `SECRET_SSID` and `SECRET_PASS` to your WiFi ssid/password in `secret.h`.
 - Modify `NTP_SERVER` and `NTP_HOUR_OFFSET` to a setting you perfer.
-- If `DEMO_MODE` is set to `true`, the watch will display a fixed time (`10:31:42 SUN 31th`) without connnecting to WiFi.
-- If `BENCHMARK` is set to `true`, it will calculate and print the time needed to draw the watch dial.
+- If `DEMO_MODE` is set to `true`, the watch will not connect to WiFi/NTP and displays a fixed time (`10:31:42 SUN 31th`).
+- If `BENCHMARK` is set to `true`, it will calculate and print the time of one watch dial drawing cycle.
 
 ### Advanced
 
