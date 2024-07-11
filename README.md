@@ -42,11 +42,15 @@ The project is not meant for commerical use. You can read more about the more de
 - If `DEMO_MODE` is set to `true`, the watch will not connect to WiFi/NTP and displays a fixed time (`10:31:42 SUN 31th`).
 - If `BENCHMARK` is set to `true`, it will calculate and print the time of one watch dial drawing cycle.
 
-### Advanced
+### Additional Notes
 
 - Most specs and color on the dial can actually be adjusted, for example:
   - `LOGO_NAME` is the name shown on the top half of watch, and `DESCRIPTION` is the smaller text on the lower half.
   - `SECOND_HAND_VIBRATION` defines the the second hand vibrations (`6` = 3 Hz). The code automatically calculates the drawing cycle time and the second hand moving angle.
-- The parts of the hour and minute hands are identified by alphabet codes, since I do not know how to name them:
+- The script utilizes an [offscreen canvas](https://learn.adafruit.com/adafruit-gfx-graphics-library?view=all#overwriting-text-or-graphics-using-an-offscreen-canvas-3132174) (a buffer) to update the screen smoothly. However, it appears that the buffer cannot be as large as the screen itself without causing memory issues. This is why I chose a diver style since the outer bezel ring can be drawn only once, and I only need to update the inner dial afterwards.
+- The script uses a few Adafruit GFX fonts. The complete list can be found [here](https://github.com/adafruit/Adafruit-GFX-Library/tree/master/Fonts).
+- The parts of the hour and minute hands are labeled by alphabet codes, since I do not know how to name them:
 
 ![design](design.png)
+
+> The script utilizes an [offscreen canvas](https://learn.adafruit.com/adafruit-gfx-graphics-library?view=all#overwriting-text-or-graphics-using-an-offscreen-canvas-3132174) (a screen buffer) to update the screen smoothly. However, it appears the buffer cannot be as large as the screen itself without causing memory issues.
