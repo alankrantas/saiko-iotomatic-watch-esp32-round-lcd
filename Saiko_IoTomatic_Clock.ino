@@ -14,7 +14,7 @@ Create a <secrets.h> in the same project:
 #define BAUD_RATE 115200    // serial port baud rate
 #define CONNECT_TIMEOUT 30  // WiFi connection timeout (seconds)
 
-#define NTP_SERVER "pool.ntp.org"  // NTP server
+#define NTP_SERVER "pool.ntp.org"  // NTP server, for example, "pool.ntp.org"
 #define NTP_HOUR_OFFSET 0          // timezone offset (hours; 1 = +1, -1 = -1)
 
 #define TFT_CS 5        // GC9A01A CS pin
@@ -178,6 +178,7 @@ const unsigned char bitmap_bezel_50[] PROGMEM = {
 const uint8_t BEAT_DELAY = round(1000 / SECOND_HAND_VIBRATION);
 const uint8_t SECOND_DELTA_DEGREE = round(6 / SECOND_HAND_VIBRATION);
 
+const uint8_t npt_update_interval = 20;  // NTP client will update itself every 20 minutes
 const String weekDays[7] = { "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT" };
 const char ssid[] = SECRET_SSID;
 const char pass[] = SECRET_PASS;
@@ -206,9 +207,47 @@ NTPClient timeClient(
   ntpUDP,
   NTP_SERVER,
   NTP_HOUR_OFFSET * 60 * 60,
-  15 * 60 * 1000);
+  npt_update_interval * 60 * 1000);
 
+// setup
 void setup() {
+
+  // initialize
+  initializeDevice();
+  if (!DEMO_MODE) initializeClock();
+  drawInitialDial();
+
+  if (DEMO_MODE) Serial.println("[demo mode]");
+  else t = millis();
+}
+
+// main loop
+void loop() {
+  if (!DEMO_MODE || !firstDialDrawn) {
+
+    // read system time
+    bool timeGet = getTime();
+
+    // check and force update time
+    if (timeGet) updateTime();
+
+    if (millis() - t >= BEAT_DELAY) {
+      // draw dial with updated time
+      t = millis();
+      drawDial();
+      if (BENCHMARK) Serial.printf("[benchmark] dial drawing: %d ms\n", millis() - t);
+
+      if (!firstDialDrawn) firstDialDrawn = true;
+
+      if (!timeGet && second_vibrate_count < SECOND_HAND_VIBRATION - 1)
+        second_vibrate_count += SECOND_DELTA_DEGREE;
+    }
+  }
+}
+
+// initialize device
+void initializeDevice() {
+  // serial
   Serial.begin(BAUD_RATE);
 
   // initialize screen and buffer
@@ -221,74 +260,60 @@ void setup() {
   canvas.fillScreen(GC9A01A_BLACK);
   canvas.setTextWrap(false);
   canvas.cp437(true);
-
-  if (!DEMO_MODE) {
-    // connect to WiFi and initialize NTP client
-    delay(500);
-    Serial.printf("Connecting to WiFi '%s'...\n", SECRET_SSID);
-
-    tft.setFont(&FreeMonoBold9pt7b);
-    tft.setTextSize(1);
-    tft.getTextBounds("Connecting WiFi...",
-                      0,
-                      0,
-                      &text_x,
-                      &text_y,
-                      &text_w,
-                      &text_h);
-
-    uint8_t count = 0;
-    bool startup_switch = true;
-    WiFi.disconnect();
-    WiFi.begin(ssid, pass);
-    while (WiFi.status() != WL_CONNECTED * 2) {
-      if (count >= CONNECT_TIMEOUT) ESP.restart();
-
-      count++;
-      Serial.print(".");
-
-      if (startup_switch)
-        tft.setTextColor(startup_switch ? GC9A01A_WHITE : GC9A01A_BLACK);
-
-      tft.setCursor(round(TFT_CENTER_X - text_w / 2),
-                    round(TFT_CENTER_Y - text_h / 2));
-      tft.print("Connecting WiFi...");
-
-      startup_switch = !startup_switch;
-      delay(500);
-    }
-
-    Serial.printf("\nConnected.\n[IP] %s\n", WiFi.localIP().toString());
-    timeClient.begin();
-  }
-
-  drawInitial();
 }
 
-// main loop
-void loop() {
-  t = millis();
+// initialize clock
+void initializeClock() {
+  // connect to WiFi and initialize NTP client
+  delay(500);
+  Serial.printf("Connecting to WiFi '%s'...\n", SECRET_SSID);
 
-  if (!DEMO_MODE) getTime();
+  tft.setFont(&FreeMonoBold9pt7b);
+  tft.setTextSize(1);
+  tft.getTextBounds("Connecting WiFi...",
+                    0,
+                    0,
+                    &text_x,
+                    &text_y,
+                    &text_w,
+                    &text_h);
 
-  if (!DEMO_MODE || !firstDialDrawn) {
-    drawDial();
-    if (BENCHMARK) Serial.printf("[benchmark] dial drawing: %d ms\n", millis() - t);
-    firstDialDrawn = true;
-    if (DEMO_MODE) Serial.println("[demo mode]");
+  uint8_t count = 0;
+  bool startup_switch = true;
+  WiFi.disconnect();
+  WiFi.begin(ssid, pass);
+  while (WiFi.status() != WL_CONNECTED * 2) {
+    if (count >= CONNECT_TIMEOUT) ESP.restart();
+
+    count++;
+    Serial.print(".");
+
+    if (startup_switch)
+      tft.setTextColor(startup_switch ? GC9A01A_WHITE : GC9A01A_BLACK);
+
+    tft.setCursor(round(TFT_CENTER_X - text_w / 2),
+                  round(TFT_CENTER_Y - text_h / 2));
+    tft.print("Connecting WiFi...");
+
+    startup_switch = !startup_switch;
+    delay(500);
   }
 
-  while ((millis() - t) < BEAT_DELAY)
-    ;
+  Serial.printf("\nConnected.\n[IP] %s\n", WiFi.localIP().toString());
+
+  timeClient.begin();
 }
 
 // read date and time from NTP client
-void getTime() {
+bool getTime() {
+  bool timeGet = false;
+
   second = timeClient.getSeconds();
   if (second >= 60) second = 0;
 
   // update time every second
   if (second != second_prev) {
+    timeGet = true;
     second_vibrate_count = 0;
 
     time_t rawtime = timeClient.getEpochTime();
@@ -300,23 +325,23 @@ void getTime() {
     hour = ti->tm_hour;
     minute = ti->tm_min;
     weekday = weekDays[ti->tm_wday];
-
     Serial.printf("[time] %4d-%02d-%02d (%s) %02d:%02d:%02d\n", year, month, day, weekday, hour, minute, second);
-
-    // try update NTP client every 30 minutes
-    if (!timeClient.isTimeSet() || minute == 0) {
-      if (!timeClient.update()) timeClient.forceUpdate();
-    }
-  } else {
-    if (second_vibrate_count < SECOND_HAND_VIBRATION - 1)
-      second_vibrate_count += SECOND_DELTA_DEGREE;
   }
 
   second_prev = second;
+  return timeGet;
+}
+
+// check and force update time (do so when time is not set or per hour)
+void updateTime() {
+  if (!timeClient.isTimeSet() || (minute == 0 && second == 0)) {
+    if (!timeClient.update())
+      timeClient.forceUpdate();
+  }
 }
 
 // draw the initial parts that do not require redrawing
-void drawInitial() {
+void drawInitialDial() {
   // diver bezel ring
   tft.fillCircle(TFT_CENTER_X,
                  TFT_CENTER_Y,
