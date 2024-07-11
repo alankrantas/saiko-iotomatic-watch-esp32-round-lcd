@@ -197,6 +197,7 @@ int16_t text_x, text_y;
 uint16_t text_w, text_h;
 static int prev_NTP_res = 0;
 bool firstDialDrawn = false;
+bool timeGet = false;
 
 // functionalities and devices
 
@@ -223,25 +224,26 @@ void setup() {
 
 // main loop
 void loop() {
-  if (!DEMO_MODE || !firstDialDrawn) {
+  if (!DEMO_MODE) {
 
     // read system time
-    bool timeGet = getTime();
+    timeGet = getTime();
 
     // check and force update time
     if (timeGet) updateTime();
+  }
 
-    if (millis() - t >= BEAT_DELAY) {
-      // draw dial with updated time
-      t = millis();
-      drawDial();
-      if (BENCHMARK) Serial.printf("[benchmark] dial drawing: %d ms\n", millis() - t);
+  if ((!DEMO_MODE || !firstDialDrawn) && millis() - t >= BEAT_DELAY) {
 
-      if (!firstDialDrawn) firstDialDrawn = true;
+    // draw dial with updated time
+    t = millis();
+    drawDial();
+    if (BENCHMARK) Serial.printf("[benchmark] dial drawing: %d ms\n", millis() - t);
 
-      if (!timeGet && second_vibrate_count < SECOND_HAND_VIBRATION - 1)
-        second_vibrate_count += SECOND_DELTA_DEGREE;
-    }
+    if (!firstDialDrawn) firstDialDrawn = true;
+
+    if (!timeGet && second_vibrate_count < SECOND_HAND_VIBRATION - 1)
+      second_vibrate_count += SECOND_DELTA_DEGREE;
   }
 }
 
