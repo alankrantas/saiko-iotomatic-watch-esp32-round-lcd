@@ -212,6 +212,8 @@ NTPClient timeClient(
 
 // setup
 void setup() {
+  // set ESP32 freq to save power
+  setCpuFrequencyMhz(80);
 
   // initialize
   initializeDevice();
