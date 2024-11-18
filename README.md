@@ -37,12 +37,23 @@ The project is not meant for commerical use. You can read more about the more de
 
 ## Clock Setup
 
-- Change the `SECRET_SSID` and `SECRET_PASS` to your WiFi ssid/password in `secret.h`.
-- Modify `NTP_SERVER` and `NTP_HOUR_OFFSET` to a setting you perfer.
-- If `DEMO_MODE` is set to `true`, the watch will not connect to WiFi/NTP and displays a fixed time (`10:31:42 SUN 31th`).
-- If `BENCHMARK` is set to `true`, it will calculate and print the time of one watch dial drawing cycle.
+### WiFi, NTP and Hour Offset
 
-### Additional Notes
+In the script
+
+1. Change the `SECRET_SSID` and `SECRET_PASS` to your WiFi ssid/password in `secret.h`.
+
+2. Modify `NTP_SERVER` and `NTP_HOUR_OFFSET` to a preferred setting.
+
+### Demo Mode
+
+If `DEMO_MODE` in the script is set to `true`, the watch will not connect to WiFi/NTP and displays a fixed time ([`10:08:42 SUN 31th`](https://museum.seiko.co.jp/en/knowledge/trivia01/)).
+
+### Benchmark
+
+If `BENCHMARK` in the script is set to `true`, it will calculate and print the time of each cycle for drawing the dial in serial.
+
+## Additional Notes
 
 - Most specs and color on the dial can actually be adjusted, for example:
   - `LOGO_NAME` is the name shown on the top half of watch, and `DESCRIPTION` is the smaller text on the lower half.
