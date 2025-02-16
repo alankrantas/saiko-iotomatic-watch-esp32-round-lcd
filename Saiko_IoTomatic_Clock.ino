@@ -15,7 +15,7 @@ Create a <secrets.h> in the same project:
 #define CONNECT_TIMEOUT 30  // WiFi connection timeout (seconds)
 
 #define NTP_SERVER "pool.ntp.org"  // NTP server, for example, "pool.ntp.org"
-#define NTP_HOUR_OFFSET 0          // timezone offset (hours; 1 = +1, -1 = -1)
+#define NTP_HOUR_OFFSET 0          // timezone offset (hours; 0 = UTC, 1 = +1, -1 = -1)
 
 #define TFT_CS 5        // GC9A01A CS pin
 #define TFT_DC 21       // GC9A01A DC pin
@@ -104,6 +104,7 @@ Create a <secrets.h> in the same project:
 #define LOGO_COLOR 0x56534E
 #define DESCRIPTION_COLOR 0x675b5A
 #define DATE_COLOR 0x4E4B47
+#define DATE_SAT_COLOR 0x5886C8
 #define DATE_SUN_COLOR 0xD90000
 #define HOUR_MIN_HAND_BORDER_COLOR 0xBE8A0B
 #define HOUR_MIN_HAND_FRONT_COLOR 0xFAEED8
@@ -185,7 +186,7 @@ const char pass[] = SECRET_PASS;
 
 // internal variables
 
-String weekday = weekDays[0];
+String weekday = weekDays[6];
 uint8_t day = 31;
 uint8_t hour = 10;
 uint8_t minute = 8;
@@ -616,6 +617,7 @@ void drawDial() {
                          round(DIAL_CENTER_Y + text_h / 2));
         canvas.print(String(day));
         if (weekday == weekDays[0]) canvas.setTextColor(RGB565(DATE_SUN_COLOR));
+        else if (weekday == weekDays[6]) canvas.setTextColor(RGB565(DATE_SAT_COLOR));
         canvas.getTextBounds(weekday,
                              0,
                              0,
