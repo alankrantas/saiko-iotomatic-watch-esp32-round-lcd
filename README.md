@@ -60,9 +60,7 @@ If `BENCHMARK` in the script is set to `true`, it will calculate and print the t
   - `SECOND_HAND_VIBRATION` defines the the second hand vibrations (`6` = 3 Hz). The code automatically calculates the drawing cycle time and the second hand moving angle. From my own test each drawing cycle only took 37 ms - so in theory the vibration can be set to as high as 27 (= 13.5 Hz). However due to the drawing limitation, the second hand may not appear moving that much.
 - The script utilizes an [offscreen canvas](https://learn.adafruit.com/adafruit-gfx-graphics-library?view=all#overwriting-text-or-graphics-using-an-offscreen-canvas-3132174) (a buffer) to update the screen smoothly. However, it appears that the buffer cannot be as large as the screen itself without causing memory issues. This is why I chose a diver style since the outer bezel ring can be drawn only once, and I only need to update the inner dial afterwards.
 - The script uses a few Adafruit GFX fonts. The complete list can be found [here](https://github.com/adafruit/Adafruit-GFX-Library/tree/master/Fonts).
+- The ESP32 is clocked at 80 MHz since we don't really need full speed to run this script, which helps to reduce the heat as well.
 - The parts of the hour and minute hands are labeled by alphabet codes, since I do not know how to name them:
 
 ![design](design.png)
-
-> The script utilizes an [offscreen canvas](https://learn.adafruit.com/adafruit-gfx-graphics-library?view=all#overwriting-text-or-graphics-using-an-offscreen-canvas-3132174) (a screen buffer) to update the screen smoothly. However, it appears the buffer cannot be as large as the screen itself without causing memory issues. This is why I chose the diver dial style since the outer bezel ring can be drawn _only_ once.
-> The ESP32 is clocked at 80 MHz since we don't really need full speed to run this script. It helps to reduce operation heat as well.
